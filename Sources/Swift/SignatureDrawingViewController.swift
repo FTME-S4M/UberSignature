@@ -135,7 +135,21 @@ public class SignatureDrawingViewController: UIViewController {
     
     override public func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
+        
+        var touchPoint: CGPoint = touches.touchPoint ?? CGPoint(x: 0, y: 0)
+        var isContain: Bool = view.layer.contains(touchPoint)
+        if !isContain {
+            view.touchesCancelled(touches, with: event)
+            return
+        }
         updateModel(withTouches: touches, shouldEndContinousLine: false)
+    }
+    
+    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        
+        model.asyncEndContinuousLine()
+        updateViewFromModel()
     }
     
     // MARK: Private
